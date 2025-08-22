@@ -1,0 +1,92 @@
+{% extends 'core.html'%} 
+
+{% block core_body %}
+<div class="container">
+    <div class="row">
+        <form>
+            <input type="text" id="cityInput" class="textbox" placeholder="Check your city's weather. Ex; London">
+            <button class="mat-button mat-primary-button" type="button" id="checkWeatherButton">
+                Check Weather
+            </button>
+        </form>
+    </div>
+    <div class="row">
+        <div class="card-container" id="weather-container">
+            
+        </div>
+    </div>
+    <div class="row bg-dark" style="padding: 10px;">
+        <ul>
+            <li>
+                <h3>How to use it ?</h3>
+            </li>
+            <li>1. When you refresh the page, the data comes from Django API</li>
+            <li>
+                2. When you enter your city name and then click the button it fetches the data from external API 
+                
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+const weatherContainer = document.getElementById("weather-container");
+const checkWeatherButton = document.getElementById("checkWeatherButton");
+const cityInput = document.getElementById("cityInput");
+
+checkWeatherButton.addEventListener("click", async () => {
+    const city = cityInput.value.trim();
+    if (!city) {
+        alert("Please enter a city name.");
+        return;
+    }
+
+   
+    weatherContainer.innerHTML = "";
+
+  
+    fetchWeather(city);
+});
+
+function fetchWeather(city) {
+    fetch(`/api/trigger/?city=${encodeURIComponent(city)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                weatherContainer.innerHTML = `<p style="color:red;">${data.error}</p>`;
+                return;
+            }
+
+            //weather of the day
+            const current = data.current;
+            const currentCard = document.createElement("div");
+            currentCard.className = "material-card";
+            currentCard.innerHTML = `
+                <h3>${current.city} (Current)</h3>
+                <img src="${current.icon}" alt="${current.description}" />
+                <p class="description">${current.description}</p>
+                <p class="temperature">Temp: ${current.temperature}°C</p>
+                <p class="updated_date">Updated: ${new Date(current.updated_date).toLocaleString()}</p>
+            `;
+            weatherContainer.appendChild(currentCard);
+
+            // 5 caRDS FOR DIRRENT DAYS
+            data.forecast.forEach(day => {
+                const dayCard = document.createElement("div");
+                dayCard.className = "material-card";
+                dayCard.innerHTML = `
+                    <h4>${day.date}</h4>
+                    <img src="${day.icon}" alt="${day.description}" />
+                    <p class="description">${day.description}</p>
+                    <p class="temperature">Max: ${day.max_temp}°C | Min: ${day.min_temp}°C</p>
+                `;
+                weatherContainer.appendChild(dayCard);
+            });
+        })
+        .catch(error => {
+            console.error("Error triggering:", error);
+            weatherContainer.innerHTML = `<p style="color:red;">Failed to fetch weather data.</p>`;
+        });
+}
+</script>
+{% endblock core_body %}

@@ -1,0 +1,36 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="centered bg-primary">
+        {% block core_header %}
+        <h3 style="color: white;">
+            <a href="/" style="color: white; text-decoration: none;">
+                What's The Weather?
+            </a>
+        </h3>
+         {% endblock core_header %}
+    </div>
+    <!-- body -->
+  <div class="centered">
+    {% block core_body %}
+    
+    {% endblock core_body %}
+  </div>
+    <!-- Footer -->
+   <div class="centered bg-light">
+        {% block core_footer %}
+        <h4>https://Jaydenmmc290.github.io</h4>
+        {% endblock core_footer %}
+    </div>
+</body>
+</html>
