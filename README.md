@@ -2,4 +2,4 @@
 
 2) Enter a city location (City, State) then press check weather
   
-3) To rest press the top logo middel of page.
+3) To rest press the top logo middle of page.
